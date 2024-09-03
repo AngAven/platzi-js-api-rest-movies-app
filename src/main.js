@@ -53,6 +53,9 @@ const getTrendingMoviesPreview = async () => {
     const {data} = await api('trending/movie/day?language=en-US')
     const {results} = data
 
+    // clear content
+    trendingMoviesPreviewList.innerHTML = ''
+
     results.forEach((movie) => {
         createContainer(
             'https://image.tmdb.org/t/p/w300/' + movie.poster_path,
@@ -66,6 +69,9 @@ const getTrendingMoviesPreview = async () => {
 const getCategoriesPreview = async () => {
     const {data} = await api('genre/movie/list?language=en')
     const {genres} = data
+
+    //clear content
+    categoriesPreviewList.innerHTML = ''
 
     genres.forEach(categorie => {
         createContainer(
