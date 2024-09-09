@@ -20,7 +20,7 @@
     <h1 class="header-title header-title--categoryView inactive">Acción</h1>
 
     <form id="searchForm" class="header-searchForm">
-        <input type="text" placeholder="Vengadores"/>
+        <input id="inputSearch" type="text" placeholder="Deadpool"/>
         <button id="searchBtn">🔍</button>
     </form>
 </header>
@@ -38,31 +38,7 @@
     <article class="categoriesPreview-list"></article>
 </section>
 
-<section id="genericList" class="genericList-container inactive">
-    <div class="movie-container">
-        <img
-                src="https://image.tmdb.org/t/p/w300/adOzdWS35KAo21r9R4BuFCkLer6.jpg"
-                class="movie-img"
-                alt="Nombre de la película"
-        />
-    </div>
-
-    <div class="movie-container">
-        <img
-                src="https://image.tmdb.org/t/p/w300/adOzdWS35KAo21r9R4BuFCkLer6.jpg"
-                class="movie-img"
-                alt="Nombre de la película"
-        />
-    </div>
-
-    <div class="movie-container">
-        <img
-                src="https://image.tmdb.org/t/p/w300/adOzdWS35KAo21r9R4BuFCkLer6.jpg"
-                class="movie-img"
-                alt="Nombre de la película"
-        />
-    </div>
-</section>
+<section id="genericList" class="genericList-container inactive"></section>
 
 <section id="movieDetail" class="movieDetail-container inactive">
     <h1 class="movieDetail-title">Deadpool</h1>
@@ -71,52 +47,16 @@
         Wisecracking mercenary Deadpool battles the evil and powerful Cable and other bad guys to save a boy's life.
     </p>
 
-    <article class="categories-list">
-        <div class="category-container">
-            <h3 id="id28" class="category-title">Romance</h3>
-        </div>
-
-        <div class="category-container">
-            <h3 id="id16" class="category-title">Drama</h3>
-        </div>
-
-        <div class="category-container">
-            <h3 id="id14" class="category-title">Acción</h3>
-        </div>
-    </article>
+    <article class="categories-list"></article>
 
     <article class="relatedMovies-container">
         <h2 class="relatedMovies-title">Películas similares</h2>
 
-        <div class="relatedMovies-scrollContainer">
-            <div class="movie-container">
-                <img
-                        src="https://image.tmdb.org/t/p/w300/adOzdWS35KAo21r9R4BuFCkLer6.jpg"
-                        class="movie-img"
-                        alt="Nombre de la película"
-                />
-            </div>
-
-            <div class="movie-container">
-                <img
-                        src="https://image.tmdb.org/t/p/w300/adOzdWS35KAo21r9R4BuFCkLer6.jpg"
-                        class="movie-img"
-                        alt="Nombre de la película"
-                />
-            </div>
-
-            <div class="movie-container">
-                <img
-                        src="https://image.tmdb.org/t/p/w300/adOzdWS35KAo21r9R4BuFCkLer6.jpg"
-                        class="movie-img"
-                        alt="Nombre de la película"
-                />
-            </div>
-        </div>
+        <div class="relatedMovies-scrollContainer"></div>
     </article>
 </section>
 
-<footer>Hecho con amor en Platzi por @juandc</footer>
+<footer>Hecho con amor en Platzi por @AngAven</footer>
 
 <script src="https://cdn.jsdelivr.net/npm/axios@1.6.7/dist/axios.min.js"></script>
 <script src="./src/api-keys.js"></script>
