@@ -104,8 +104,6 @@ const getCategoriesPreview = async () => {
 }
 
 const getMoviesByCategory = async (id, categoryName) =>  {
-    // clear content
-    genericSection.innerHTML = ''
     headerCategoryTitle.textContent = decodeURI(categoryName)
 
     const {data} = await api('discover/movie', {
@@ -118,6 +116,9 @@ const getMoviesByCategory = async (id, categoryName) =>  {
     })
     const {results} = data
 
+    // clear content
+    genericSection.innerHTML = ''
+
     results.forEach(movie => {
         createContainer(
             'https://image.tmdb.org/t/p/w300/' + movie.poster_path,
@@ -129,8 +130,6 @@ const getMoviesByCategory = async (id, categoryName) =>  {
 }
 
 const getMoviesBySearch = async (query) => {
-    // clear content
-    genericSection.innerHTML = ''
     headerCategoryTitle.textContent = decodeURI(query)
 
     const {data} = await api('search/movie', {
@@ -140,6 +139,9 @@ const getMoviesBySearch = async (query) => {
     })
 
     const {results} = data
+
+    // clear content
+    genericSection.innerHTML = ''
 
     results.forEach(movie => {
         createContainer(
@@ -152,11 +154,11 @@ const getMoviesBySearch = async (query) => {
 }
 
 const getTrendingMovies = async () => {
-    // clear content
-    genericSection.innerHTML = ''
     const {data} = await api('trending/movie/day?language=en-US')
     const {results} = data
 
+    // clear content
+    genericSection.innerHTML = ''
     results.forEach(movie => {
         createContainer(
             'https://image.tmdb.org/t/p/w300/' + movie.poster_path,

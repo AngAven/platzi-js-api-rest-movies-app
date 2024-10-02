@@ -105,6 +105,27 @@ button {
     cursor: pointer;
 }
 
+.movie-container--loading {
+    background: var(--purple-light-2);
+    border-radius: 8px;
+    height: 225px;
+    min-height: 225px;
+    max-height: 225px;
+    width: 150px;
+    min-width: 150px;
+    max-width: 150px;
+    margin-bottom: 15px;
+    animation: loading-skeleton infinite 1.5s;
+}
+
+.movie-container--loading:nth-child(2){
+    animation-delay: .2s;
+}
+
+.movie-container--loading:nth-child(3){
+    animation-delay: .4s;
+}
+
 .movie-img {
     border-radius: 8px;
 }
@@ -234,6 +255,20 @@ button {
     width: 8px;
     height: 8px;
 }
+
+.category-container--loading{
+    background: var(--purple-light-2);
+    border-radius: 8px;
+    height: 21px;
+    min-height: 21px;
+    max-height: 21px;
+    width: 153px;
+    min-width: 153px;
+    max-width: 153px;
+    margin-bottom: 15px;
+    animation: loading-skeleton infinite 1.5s;
+}
+
 #id28 { --idColor: var(--yellow); }
 #id12 { --idColor: var(--red); }
 #id16 { --idColor: var(--green); }
@@ -356,4 +391,14 @@ footer {
 /* Navigation */
 .inactive {
     display: none;
+}
+
+/* Animations */
+@keyframes loading-skeleton{
+    0%, 100%{
+        opacity: 100%;
+    }
+    50%{
+        opacity: 0%
+    }
 }
