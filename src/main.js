@@ -37,6 +37,9 @@ const createContainer = (
 
     if((containerClass === 'movie-container') || (containerClass === 'movie-container')){
         const img = document.createElement('img')
+        img.addEventListener("error", (evt) => {
+            img.src = 'https://images.unsplash.com/photo-1609743522653-52354461eb27?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMTgwOTN8MHwxfHNlYXJjaHwxMXx8bm90JTIwZm91bmR8ZW58MHx8fHwxNzI4MTEwNTQ2fDA&ixlib=rb-4.0.3&q=80&w=1080'
+        })
 
         if(lazyLoading){
             lazyLoader.observe(img)
@@ -65,7 +68,6 @@ const createContainer = (
     }
 
     container.addEventListener('click', () => {
-        console.log('id => ', id)
         location.hash = `#movie=${id}`
     })
 
@@ -154,7 +156,9 @@ const getMoviesBySearch = async (query) => {
             'https://image.tmdb.org/t/p/w300/' + movie.poster_path,
             movie.title,
             '.genericList-container',
-            'movie-container'
+            'movie-container',
+            movie.id,
+            true
         )
     })
 }
@@ -213,17 +217,17 @@ const getSimilarMovies = async(movieId) => {
     const {data} = await api(`movie/${movieId}/similar?language=en-US&page=1`)
     const {results} = data
 
-    console.log('movieId => ', movieId)
-
+    // clear content
     relatedMoviesContainer.innerHTML = ''
-    console.log('data similar movies => ', results)
+
     results.forEach(movie => {
         createContainer(
             'https://image.tmdb.org/t/p/w300/' + movie.poster_path,
             movie.title,
             '.relatedMovies-scrollContainer',
             'movie-container',
-            movie.id
+            movie.id,
+            true
         )
     })
 }
