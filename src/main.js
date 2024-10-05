@@ -15,22 +15,36 @@ const api = axios.create({
     }
 })
 
+const lazyLoader = new IntersectionObserver((imagesURL) => {
+    imagesURL.forEach((url) => {
+        if (url.isIntersecting){
+            const imgURL = url.target.getAttribute('data-img')
+            url.target.setAttribute('src', imgURL)
+        }
+    })
+})
+
 const createContainer = (
     url = '',
     titleName = '',
     parentClass = '',
     containerClass = '',
-    id = ''
+    id = '',
+    lazyLoading = false
 ) => {
     const parent = document.querySelector(parentClass)
     const container = document.createElement('div')
 
-    if(containerClass === 'movie-container'){
+    if((containerClass === 'movie-container') || (containerClass === 'movie-container')){
         const img = document.createElement('img')
+
+        if(lazyLoading){
+            lazyLoader.observe(img)
+        }
 
         container.classList.add(containerClass)
         img.classList.add('movie-img')
-        img.src = url
+        img.setAttribute(lazyLoading ? 'data-img' :  'src', url)
         img.alt = titleName
         container.appendChild(img)
         parent.appendChild(container)
@@ -47,15 +61,6 @@ const createContainer = (
         })
 
         container.appendChild(title)
-        parent.appendChild(container)
-    } else if (containerClass === 'movie-container'){
-        const img = document.createElement('img')
-
-        container.classList.add('movie-container')
-        img.src = url
-        img.alt = titleName
-        img.classList.add('movie-img')
-        container.appendChild(img)
         parent.appendChild(container)
     }
 
@@ -80,7 +85,8 @@ const getTrendingMoviesPreview = async () => {
             movie.title,
             '.trendingPreview-movieList',
             'movie-container',
-            movie.id
+            movie.id,
+            true
         )
     })
 }
