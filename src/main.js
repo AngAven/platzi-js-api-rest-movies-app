@@ -175,10 +175,49 @@ const getTrendingMovies = async () => {
             movie.title,
             '.genericList-container',
             'movie-container',
-            movie.id
+            movie.id,
+            true
         )
     })
 
+    const btnLoadMore = document.createElement('button')
+    btnLoadMore.innerText = 'Load more'
+    genericSection.appendChild(btnLoadMore)
+
+    btnLoadMore.addEventListener('click', () => {
+        getPaginatedTrendingMovies()
+    })
+}
+
+let page = 1
+
+const getPaginatedTrendingMovies = async () => {
+    page++
+    const {data} = await api('trending/movie/day?language=en-US', {
+        params:{
+            page: page
+        }
+    })
+    const {results} = data
+
+    results.forEach(movie => {
+        createContainer(
+            'https://image.tmdb.org/t/p/w300/' + movie.poster_path,
+            movie.title,
+            '.genericList-container',
+            'movie-container',
+            movie.id,
+            true
+        )
+    })
+
+    const btnLoadMore = document.createElement('button')
+    btnLoadMore.innerText = 'Load more'
+    genericSection.appendChild(btnLoadMore)
+
+    btnLoadMore.addEventListener('click', () => {
+        getPaginatedTrendingMovies()
+    })
 }
 
 const getMovieById = async (movieId) => {
