@@ -179,45 +179,37 @@ const getTrendingMovies = async () => {
             true
         )
     })
-
-    const btnLoadMore = document.createElement('button')
-    btnLoadMore.innerText = 'Load more'
-    genericSection.appendChild(btnLoadMore)
-
-    btnLoadMore.addEventListener('click', () => {
-        getPaginatedTrendingMovies()
-    })
 }
 
-let page = 1
-
 const getPaginatedTrendingMovies = async () => {
-    page++
-    const {data} = await api('trending/movie/day?language=en-US', {
-        params:{
-            page: page
-        }
-    })
-    const {results} = data
+    const {
+        scrollTop,
+        scrollHeight,
+        clientHeight
+    } = document.documentElement
 
-    results.forEach(movie => {
-        createContainer(
-            'https://image.tmdb.org/t/p/w300/' + movie.poster_path,
-            movie.title,
-            '.genericList-container',
-            'movie-container',
-            movie.id,
-            true
-        )
-    })
+    const scrollIsBottom =  (scrollTop + clientHeight) >= (scrollHeight - 15)
 
-    const btnLoadMore = document.createElement('button')
-    btnLoadMore.innerText = 'Load more'
-    genericSection.appendChild(btnLoadMore)
+    if (scrollIsBottom){
+        page++
+        const {data} = await api('trending/movie/day?language=en-US', {
+            params:{
+                page: page
+            }
+        })
+        const {results} = data
 
-    btnLoadMore.addEventListener('click', () => {
-        getPaginatedTrendingMovies()
-    })
+        results.forEach(movie => {
+            createContainer(
+                'https://image.tmdb.org/t/p/w300/' + movie.poster_path,
+                movie.title,
+                '.genericList-container',
+                'movie-container',
+                movie.id,
+                true
+            )
+        })
+    }
 }
 
 const getMovieById = async (movieId) => {

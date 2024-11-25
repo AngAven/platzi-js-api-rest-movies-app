@@ -1,3 +1,6 @@
+let page = 1
+let infiniteScroll
+
 searchFormBtn.addEventListener('click', () => {
     if (searchFormInput.value.trim()){
         location.hash = '#search=' + searchFormInput.value
@@ -16,6 +19,7 @@ trendingBtn.addEventListener('click', (evt) => {
 
 window.addEventListener('DOMContentLoaded', navigator, false)
 window.addEventListener('hashchange', navigator, false)
+window.addEventListener('scroll', infiniteScroll, false)
 
 const scrollToTop = () => {
     window.scrollTo({
@@ -26,6 +30,12 @@ const scrollToTop = () => {
 
 function navigator() {
     console.log('- navigator -')
+
+    if (infiniteScroll){
+        window.removeEventListener('scroll', infiniteScroll, { passive: false })
+        infiniteScroll = undefined
+    }
+
     if (location.hash.startsWith('#trends')) {
         trendsPage()
     } else if (location.hash.startsWith('#search=')) {
@@ -39,6 +49,11 @@ function navigator() {
     }
 
     scrollToTop()
+
+    if (infiniteScroll){
+        console.log('infiniteScroll => ', infiniteScroll)
+        window.addEventListener('scroll', infiniteScroll, { passive: false })
+    }
 }
 
 const homePage = () => {
@@ -135,4 +150,5 @@ const trendsPage = () => {
     movieDetailSection.classList.add('inactive')
 
     getTrendingMovies()
+    infiniteScroll = getPaginatedTrendingMovies
 }
