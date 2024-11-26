@@ -188,7 +188,8 @@ const getPaginatedTrendingMovies = async () => {
         clientHeight
     } = document.documentElement
 
-    const scrollIsBottom =  (scrollTop + clientHeight) >= (scrollHeight - 15)
+    // const scrollIsBottom =  (scrollTop + clientHeight) >= (scrollHeight - 15)
+    const scrollIsBottom =  Math.abs(scrollHeight - scrollTop - clientHeight) <= 1
 
     if (scrollIsBottom){
         page++
