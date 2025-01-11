@@ -35,7 +35,7 @@ const createContainer = (
     const parent = document.querySelector(parentClass)
     const container = document.createElement('div')
 
-    if((containerClass === 'movie-container') || (containerClass === 'movie-container')){
+    if(containerClass === 'movie-container'){
         const img = document.createElement('img')
         img.addEventListener("error", (evt) => {
             img.src = 'https://images.unsplash.com/photo-1609743522653-52354461eb27?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMTgwOTN8MHwxfHNlYXJjaHwxMXx8bm90JTIwZm91bmR8ZW58MHx8fHwxNzI4MTEwNTQ2fDA&ixlib=rb-4.0.3&q=80&w=1080'
@@ -123,6 +123,7 @@ const getMoviesByCategory = async (id, categoryName) =>  {
         }
     })
     const {results} = data
+    maxPage = data.total_pages
 
     // clear content
     genericSection.innerHTML = ''
@@ -137,6 +138,44 @@ const getMoviesByCategory = async (id, categoryName) =>  {
     })
 }
 
+const getPaginatedMoviesByCategory = (id) => {
+    return async () => {
+        const {
+            scrollTop,
+            scrollHeight,
+            clientHeight
+        } = document.documentElement
+
+        // const scrollIsBottom =  (scrollTop + clientHeight) >= (scrollHeight - 15)
+        const scrollIsBottom =  Math.abs(scrollHeight - scrollTop - clientHeight) <= 1
+        const pageIsNotMax = page < maxPage
+
+        if (scrollIsBottom && pageIsNotMax){
+            page++
+
+            const {data} = await api('discover/movie', {
+                params: {
+                    with_genres: id,
+                    language: 'en-US',
+                    page: 1,
+                    adult: true
+                }
+            })
+
+            const {results} = data
+
+            results.forEach(movie => {
+                createContainer(
+                    'https://image.tmdb.org/t/p/w300/' + movie.poster_path,
+                    movie.title,
+                    '.genericList-container',
+                    'movie-container'
+                )
+            })
+        }
+    }
+}
+
 const getMoviesBySearch = async (query) => {
     headerCategoryTitle.textContent = decodeURI(query)
 
@@ -147,6 +186,7 @@ const getMoviesBySearch = async (query) => {
     })
 
     const {results} = data
+    maxPage = data.total_pages
 
     // clear content
     genericSection.innerHTML = ''
@@ -163,9 +203,48 @@ const getMoviesBySearch = async (query) => {
     })
 }
 
+const getPaginatedMoviesBySearch = (query) => {
+    return async () => {
+        const {
+            scrollTop,
+            scrollHeight,
+            clientHeight
+        } = document.documentElement
+
+        // const scrollIsBottom =  (scrollTop + clientHeight) >= (scrollHeight - 15)
+        const scrollIsBottom =  Math.abs(scrollHeight - scrollTop - clientHeight) <= 1
+        const pageIsNotMax = page < maxPage
+
+        if (scrollIsBottom && pageIsNotMax){
+            page++
+
+            const {data} = await api('search/movie', {
+                params: {
+                    query,
+                    page
+                }
+            })
+
+            const {results} = data
+
+            results.forEach(movie => {
+                createContainer(
+                    'https://image.tmdb.org/t/p/w300/' + movie.poster_path,
+                    movie.title,
+                    '.genericList-container',
+                    'movie-container',
+                    movie.id,
+                    true
+                )
+            })
+        }
+    }
+}
+
 const getTrendingMovies = async () => {
     const {data} = await api('trending/movie/day?language=en-US')
     const {results} = data
+    maxPage = data.total_pages
 
     // clear content
     genericSection.innerHTML = ''
@@ -190,8 +269,9 @@ const getPaginatedTrendingMovies = async () => {
 
     // const scrollIsBottom =  (scrollTop + clientHeight) >= (scrollHeight - 15)
     const scrollIsBottom =  Math.abs(scrollHeight - scrollTop - clientHeight) <= 1
+    const pageIsNotMax = page < maxPage
 
-    if (scrollIsBottom){
+    if (scrollIsBottom && pageIsNotMax){
         page++
         const {data} = await api('trending/movie/day?language=en-US', {
             params:{

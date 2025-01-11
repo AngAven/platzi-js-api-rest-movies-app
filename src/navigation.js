@@ -1,5 +1,6 @@
 let page = 1
 let infiniteScroll
+let maxPage
 
 searchFormBtn.addEventListener('click', () => {
     if (searchFormInput.value.trim()){
@@ -51,7 +52,6 @@ function navigator() {
     scrollToTop()
 
     if (infiniteScroll){
-        console.log('infiniteScroll => ', infiniteScroll)
         window.addEventListener('scroll', infiniteScroll, { passive: false })
     }
 }
@@ -93,6 +93,8 @@ const categoriesPage = () => {
     const [id, categoryName] = categoryData.split('-')
 
     getMoviesByCategory(id,categoryName)
+
+    infiniteScroll = getPaginatedMoviesByCategory(id)
 }
 
 const searchPage = () => {
@@ -112,6 +114,8 @@ const searchPage = () => {
 
     const [_, query] = location.hash.split('=')
     getMoviesBySearch(query)
+
+    infiniteScroll = getPaginatedMoviesBySearch(query)
 }
 
 const movieDetailsPage = () => {
