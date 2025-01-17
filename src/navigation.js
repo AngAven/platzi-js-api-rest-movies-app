@@ -66,12 +66,14 @@ const homePage = () => {
     headerCategoryTitle.classList.add('inactive')
     searchForm.classList.remove('inactive')
     trendingPreviewSection.classList.remove('inactive')
+    likedMoviesSection.classList.remove('inactive')
     categoriesPreviewSection.classList.remove('inactive')
     genericSection.classList.add('inactive')
     movieDetailSection.classList.add('inactive')
 
     getTrendingMoviesPreview()
     getCategoriesPreview()
+    getLikedMovies()
 }
 
 const categoriesPage = () => {
@@ -85,6 +87,7 @@ const categoriesPage = () => {
     searchForm.classList.remove('inactive')
 
     trendingPreviewSection.classList.add('inactive')
+    likedMoviesSection.classList.add('inactive')
     categoriesPreviewSection.classList.add('inactive')
     genericSection.classList.remove('inactive')
     movieDetailSection.classList.add('inactive')
@@ -92,7 +95,7 @@ const categoriesPage = () => {
     const [_, categoryData] = location.hash.split('=')
     const [id, categoryName] = categoryData.split('-')
 
-    getMoviesByCategory(id,categoryName)
+    getMoviesByCategory(id, categoryName).then()
 
     infiniteScroll = getPaginatedMoviesByCategory(id)
 }
@@ -108,6 +111,7 @@ const searchPage = () => {
     searchForm.classList.remove('inactive')
 
     trendingPreviewSection.classList.add('inactive')
+    likedMoviesSection.classList.add('inactive')
     categoriesPreviewSection.classList.add('inactive')
     genericSection.classList.remove('inactive')
     movieDetailSection.classList.add('inactive')
@@ -129,6 +133,7 @@ const movieDetailsPage = () => {
     searchForm.classList.add('inactive')
 
     trendingPreviewSection.classList.add('inactive')
+    likedMoviesSection.classList.add('inactive')
     categoriesPreviewSection.classList.add('inactive')
     genericSection.classList.add('inactive')
     movieDetailSection.classList.remove('inactive')
@@ -149,10 +154,11 @@ const trendsPage = () => {
     headerCategoryTitle.classList.remove('inactive')
     searchForm.classList.add('inactive')
     trendingPreviewSection.classList.add('inactive')
+    likedMoviesSection.classList.add('inactive')
     categoriesPreviewSection.classList.add('inactive')
     genericSection.classList.remove('inactive')
     movieDetailSection.classList.add('inactive')
 
-    getTrendingMovies()
+    getTrendingMovies().then()
     infiniteScroll = getPaginatedTrendingMovies
 }

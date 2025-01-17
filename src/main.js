@@ -1,11 +1,4 @@
 const BASE_URL = 'https://api.themoviedb.org/3/'
-const options = {
-    method: 'GET',
-    headers: {
-        accept: 'application/json',
-        Authorization: BEREAR
-    }
-}
 
 const api = axios.create({
     baseURL: BASE_URL,
@@ -14,6 +7,31 @@ const api = axios.create({
         Authorization: BEREAR
     }
 })
+
+function likeMovie(movie){
+    const likedMovies = likedMoviesList()
+
+    if(likedMovies[movie.id]){
+        delete likedMovies[movie.id]
+    } else {
+        likedMovies[movie.id] = movie
+    }
+
+    localStorage.setItem('liked-movies', JSON.stringify(likedMovies))
+}
+
+function likedMoviesList(){
+    const item = JSON.parse(localStorage.getItem('liked-movies'))
+    let movies
+
+    if (item){
+        movies = item
+    } else {
+        movies = {}
+    }
+
+    return movies
+}
 
 const lazyLoader = new IntersectionObserver((imagesURL) => {
     imagesURL.forEach((url) => {
@@ -30,15 +48,29 @@ const createContainer = (
     parentClass = '',
     containerClass = '',
     id = '',
-    lazyLoading = false
+    lazyLoading = false,
+    movie = {},
 ) => {
     const parent = document.querySelector(parentClass)
     const container = document.createElement('div')
+    const img = document.createElement('img')
 
     if(containerClass === 'movie-container'){
-        const img = document.createElement('img')
-        img.addEventListener("error", (evt) => {
+
+        img.addEventListener("error", () => {
             img.src = 'https://images.unsplash.com/photo-1609743522653-52354461eb27?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMTgwOTN8MHwxfHNlYXJjaHwxMXx8bm90JTIwZm91bmR8ZW58MHx8fHwxNzI4MTEwNTQ2fDA&ixlib=rb-4.0.3&q=80&w=1080'
+        })
+
+        const movieBtn = document.createElement('button')
+        movieBtn.classList.add('movie-btn')
+
+        // console.log('likedMoviesList()[movie.id] => ', likedMoviesList()[movie.id])
+        console.log('likedMoviesList()', likedMoviesList())
+        likedMoviesList()[movie.id] && movieBtn.classList.add('movie-btn--liked')
+
+        movieBtn.addEventListener('click', () => {
+            movieBtn.classList.toggle('movie-btn--liked')
+            likeMovie(movie)
         })
 
         if(lazyLoading){
@@ -50,6 +82,7 @@ const createContainer = (
         img.setAttribute(lazyLoading ? 'data-img' :  'src', url)
         img.alt = titleName
         container.appendChild(img)
+        container.appendChild(movieBtn)
         parent.appendChild(container)
     } else if (containerClass === 'category-container'){
         const title = document.createElement('h3')
@@ -59,7 +92,7 @@ const createContainer = (
         title.classList.add('category-title')
         title.textContent = titleName
 
-        title.addEventListener('click', (ev) => {
+        title.addEventListener('click', () => {
             location.hash = `#category=${id}-${titleName}`
         })
 
@@ -67,7 +100,7 @@ const createContainer = (
         parent.appendChild(container)
     }
 
-    container.addEventListener('click', () => {
+    img.addEventListener('click', () => {
         location.hash = `#movie=${id}`
     })
 
@@ -83,12 +116,13 @@ const getTrendingMoviesPreview = async () => {
 
     results.forEach((movie) => {
         createContainer(
-            'https://image.tmdb.org/t/p/w300/' + movie.poster_path,
+            'https://image.tmdb.org/t/p/w300' + movie.poster_path,
             movie.title,
             '.trendingPreview-movieList',
             'movie-container',
             movie.id,
-            true
+            true,
+            movie,
         )
     })
 }
@@ -133,7 +167,10 @@ const getMoviesByCategory = async (id, categoryName) =>  {
             'https://image.tmdb.org/t/p/w300/' + movie.poster_path,
             movie.title,
             '.genericList-container',
-            'movie-container'
+            'movie-container',
+            movie.id,
+            true,
+            movie,
         )
     })
 }
@@ -157,7 +194,7 @@ const getPaginatedMoviesByCategory = (id) => {
                 params: {
                     with_genres: id,
                     language: 'en-US',
-                    page: 1,
+                    page,
                     adult: true
                 }
             })
@@ -166,7 +203,7 @@ const getPaginatedMoviesByCategory = (id) => {
 
             results.forEach(movie => {
                 createContainer(
-                    'https://image.tmdb.org/t/p/w300/' + movie.poster_path,
+                    'https://image.tmdb.org/t/p/w300' + movie.poster_path,
                     movie.title,
                     '.genericList-container',
                     'movie-container'
@@ -193,7 +230,7 @@ const getMoviesBySearch = async (query) => {
 
     results.forEach(movie => {
         createContainer(
-            'https://image.tmdb.org/t/p/w300/' + movie.poster_path,
+            'https://image.tmdb.org/t/p/w300' + movie.poster_path,
             movie.title,
             '.genericList-container',
             'movie-container',
@@ -229,7 +266,7 @@ const getPaginatedMoviesBySearch = (query) => {
 
             results.forEach(movie => {
                 createContainer(
-                    'https://image.tmdb.org/t/p/w300/' + movie.poster_path,
+                    'https://image.tmdb.org/t/p/w300' + movie.poster_path,
                     movie.title,
                     '.genericList-container',
                     'movie-container',
@@ -250,12 +287,13 @@ const getTrendingMovies = async () => {
     genericSection.innerHTML = ''
     results.forEach(movie => {
         createContainer(
-            'https://image.tmdb.org/t/p/w300/' + movie.poster_path,
+            'https://image.tmdb.org/t/p/w300' + movie.poster_path,
             movie.title,
             '.genericList-container',
             'movie-container',
             movie.id,
-            true
+            true,
+            movie
         )
     })
 }
@@ -282,12 +320,13 @@ const getPaginatedTrendingMovies = async () => {
 
         results.forEach(movie => {
             createContainer(
-                'https://image.tmdb.org/t/p/w300/' + movie.poster_path,
+                'https://image.tmdb.org/t/p/w300' + movie.poster_path,
                 movie.title,
                 '.genericList-container',
                 'movie-container',
                 movie.id,
-                true
+                true,
+                movie
             )
         })
     }
@@ -334,12 +373,31 @@ const getSimilarMovies = async(movieId) => {
 
     results.forEach(movie => {
         createContainer(
-            'https://image.tmdb.org/t/p/w300/' + movie.poster_path,
+            'https://image.tmdb.org/t/p/w300' + movie.poster_path,
             movie.title,
             '.relatedMovies-scrollContainer',
             'movie-container',
             movie.id,
             true
+        )
+    })
+}
+
+const getLikedMovies = async () => {
+    const likeMovies = likedMoviesList()
+    const moviesArray = Object.values(likeMovies)
+
+    // clear content
+    likedMoviesListContainer.innerHTML = ''
+    moviesArray.forEach(movie => {
+        createContainer(
+            'https://image.tmdb.org/t/p/w300' + movie.poster_path,
+            '',
+            '.liked-movieList',
+            'movie-container',
+            movie.id,
+            true,
+            movie
         )
     })
 }
