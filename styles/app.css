@@ -106,6 +106,10 @@ button {
     position: relative;
 }
 
+.movie-container:hover{
+    opacity: 0.8;
+}
+
 .movie-container--loading {
     background: var(--purple-light-2);
     border-radius: 8px;
